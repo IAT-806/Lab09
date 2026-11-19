@@ -1,109 +1,46 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lab 08</title>
-  <style>
-    :root {
-      --paper: #eef1f4; --panel: #ffffff; --ink: #1b2430; --muted: #5b6675;
-      --line: #d5dbe3; --accent: #2f5bea; --error: #b42318; --ok: #1a7f4b;
-      color-scheme: light;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --paper: #151a21; --panel: #1c222b; --ink: #e6eaf0; --muted: #9aa5b4;
-        --line: #2c3440; --accent: #7c9bff; --error: #ff8a80; --ok: #5cc98a;
-        color-scheme: dark;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 09</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 640px;
+        margin: 40px auto;
+        padding: 0 16px;
       }
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; background: var(--paper); color: var(--ink);
-      font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    }
-    main { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
-    h1 { font-size: 22px; margin: 0 0 8px; }
-    #stage canvas { display: block; max-width: 100%; height: auto; border-radius: 4px; margin: 16px 0; }
-    form { display: flex; gap: 8px; }
-    input, select, button {
-      font: inherit; color: var(--ink); background: var(--panel);
-      border: 1px solid var(--line); border-radius: 4px; padding: 6px 10px;
-    }
-    input { flex: 1; min-width: 0; }
-    button { background: var(--accent); border-color: var(--accent); color: #fff; cursor: pointer; }
-    button:disabled { opacity: 0.5; cursor: wait; }
-    #status { font-size: 14px; color: var(--muted); }
-    #status.ok { color: var(--ok); }
-    #status.error { color: var(--error); }
-    pre { font: 12px/1.6 ui-monospace, Menlo, monospace; background: var(--panel); padding: 10px; border-radius: 4px; white-space: pre-wrap; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>Lab 08</h1>
-    <p>Type a few words. A model running on your own computer turns them into weather.</p>
-
-    <p id="status">Looking for a model…</p>
-    <select id="model" aria-label="Model"></select>
-
-    <div id="stage"></div>
-
-    <form id="form">
-      <input id="prompt" placeholder="a rainy monday" aria-label="A few words" autocomplete="off">
-      <button id="send">Send</button>
-    </form>
-
-    <pre id="answer">The model's answer will show up here.</pre>
-  </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/p5@2.3.3/lib/p5.min.js"></script>
-
-  <!-- Where the model runs. Keep ONE of these two lines. -->
-  <script src="ollama.js"></script>                   <!-- Ollama, on your computer -->
-  <!-- <script type="module" src="webllm.js"></script> --> <!-- WebLLM, inside the browser -->
-
-  <script src="sketch.js"></script>
-
-  <!-- The page: find the models, send what you type to sketch.js, show the answer. -->
-  <script>
-    const $ = (selector) => document.querySelector(selector);
-
-    // 1. Which models can we use? (wait for the page, so webllm.js has loaded too)
-    async function findModels() {
-      try {
-        let names = await listModels(); // ollama.js or webllm.js
-        for (let name of names) {
-          $('#model').append(new Option(name, name));
-        }
-        showStatus('Ready. Pick a model and type something.', 'ok');
-      } catch (err) {
-        showStatus(err.message, 'error');
+      input,
+      textarea,
+      button {
+        display: block;
+        width: 100%;
+        margin-bottom: 12px;
+        font: inherit;
+        padding: 8px;
+        box-sizing: border-box;
       }
-    }
-    window.addEventListener('DOMContentLoaded', findModels);
-
-    // 2. Send what you typed.
-    $('#form').addEventListener('submit', async (event) => {
-      event.preventDefault(); // a form normally reloads the page
-      let words = $('#prompt').value.trim();
-      if (!words) return;
-
-      $('#send').disabled = true;
-      $('#answer').textContent = 'Thinking… (the first call is slow while the model loads)';
-      try {
-        let answer = await respondTo(words, $('#model').value); // sketch.js
-        $('#answer').textContent = JSON.stringify(answer, null, 2);
-      } catch (err) {
-        $('#answer').textContent = `Error: ${err.message}`;
+      pre {
+        background: #f2f2f2;
+        padding: 12px;
+        white-space: pre-wrap;
       }
-      $('#send').disabled = false;
-    });
+    </style>
+  </head>
+  <body>
+    <h1>Lab 09</h1>
 
-    function showStatus(text, kind) {
-      $('#status').textContent = text;
-      $('#status').className = kind;
-    }
-  </script>
-</body>
+    <input id="character" placeholder="A character (a lonely robot)" />
+    <input id="place" placeholder="A place (a laundromat at 3am)" />
+    <button id="send">Send</button>
+
+    <pre id="output"></pre>
+
+    <!-- Where the model runs. Keep ONE of these two lines. -->
+    <script src="ollama.js"></script>
+    <!-- <script type="module" src="webllm.js"></script> -->
+
+    <script src="agent.js"></script>
+  </body>
 </html>
