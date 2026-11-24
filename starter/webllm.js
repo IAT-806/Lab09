@@ -1,5 +1,5 @@
 // webllm.js
-// The same chat() function, but the model runs INSIDE THE BROWSER TAB with WebLLM.
+// chat(prompt) using WebLLM. The model runs INSIDE THE BROWSER TAB.
 // Nothing to install, and it works on GitHub Pages for anyone who opens your page.
 // The catch: the first time, the browser downloads the model (about 1 GB).
 // After that it's saved, and it starts in a few seconds.
@@ -30,4 +30,4 @@ async function chat(prompt) {
   return reply.choices[0].message.content;
 }
 
-window.chat = chat; // so agent.js can use chat()
+window.chat = chat; // so your app's .js file can use chat()

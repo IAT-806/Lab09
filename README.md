@@ -1,123 +1,129 @@
-# Lab 09 — Your Own AI
+# Lab 09 — A Creative AI App
 
-In class we wrote `agent.js`: it builds a prompt from what you type, sends it to a model on OpenRouter with `fetch`, and shows the answer. In this lab you run the model **on your own computer** instead. It's free, it needs no key, and nothing you type leaves your laptop.
+In class we wrote `agent.js`. It reads what you type, puts it in a prompt, sends it to a model on OpenRouter with `fetch`, and shows the answer.
 
-Then you build a small **AI app with a creative interaction**: something you play with, not just a question and an answer.
+In this lab you build on top of that. You make a small **creative app with a language model**: something people play with, not just a question and an answer. You also try running the model in a new way.
 
-There are two ways to run the model. Pick one:
+## Three ways to run the model
 
-|                        | **Ollama** (recommended)                   | **WebLLM** (easier to set up)                       |
-| ---------------------- | ------------------------------------------ | --------------------------------------------------- |
-| Where the model runs   | an app on your computer                    | inside the browser tab                              |
-| Install                | the Ollama app + one model                 | nothing                                             |
-| Models                 | many, and bigger ones                      | a few small ones                                    |
-| Works on GitHub Pages? | only for people who set up Ollama (step 5) | yes, for anyone with Chrome or Edge                 |
-| First run              | download the model once in the terminal    | the page downloads the model (~1 GB) the first time |
+The starter has three files. Each one has the same `chat(prompt)` function from class. Your app calls `chat()`, and it doesn't matter which file it comes from.
 
-Both give you the same `chat(prompt)` function, so you can switch by changing one line.
+| File            | Where the model runs                     | What you need                                                |
+| --------------- | ---------------------------------------- | ------------------------------------------------------------ |
+| `openrouter.js` | on OpenRouter's computers (like in class) | your OpenRouter key                                          |
+| `ollama.js`     | on your computer, in the Ollama app      | install Ollama and download a model                          |
+| `webllm.js`     | inside the browser tab                   | Chrome or Edge. The first time, the page downloads the model (about 1 GB) |
 
-## 1. Set up
+Build with whichever one you like. But **try Ollama or WebLLM at least once**, even if you end up using OpenRouter.
 
-**Ollama:**
+To switch, keep one of these three lines in your HTML file and comment out the other two:
+
+```html
+<script src="openrouter.js"></script>
+<!-- <script src="ollama.js"></script> -->
+<!-- <script type="module" src="webllm.js"></script> -->
+```
+
+### OpenRouter
+
+Use the same key as in class. Paste it in the key box on the page. Never type it into your code: your site is on GitHub.
+
+### Ollama
 
 1. Download and install Ollama from [ollama.com/download](https://ollama.com/download). Open the app.
 2. In a terminal, download a model:
    ```
    ollama pull gemma3:1b
    ```
-   That's about 0.8 GB and runs on any laptop. With 16 GB of RAM or more, try `gemma3:4b` too (3.3 GB, smarter).
+   That's about 0.8 GB and runs on any laptop. If you have 16 GB of RAM or more, try `gemma3:4b` too. It's smarter.
 3. Talk to it in the terminal: `ollama run gemma3:1b`. Say hi. Type `/bye` to leave.
 4. Open [http://localhost:11434](http://localhost:11434) in your browser. It should say **Ollama is running**.
 
-**WebLLM:** nothing to install. You need Chrome or Edge on a laptop. Go to step 2.
+Open `ollama.js` next to your `agent.js` from class. Only two things changed: the URL is `localhost`, which means **your own computer**, and there's **no key**. If you downloaded a different model, change `MODEL`.
 
-## 2. Run the starter
+### WebLLM
+
+Nothing to install. The first time you press Send, the page downloads the model and shows the progress. After that it's saved, and it starts in a few seconds.
+
+## Set up
+
+1. In your website repo, make a folder called `lab-09`.
+2. On this repo's GitHub page, click the green **Code** button, then **Download ZIP**. Unzip it.
+3. Copy everything from `starter/` into `lab-09/`:
 
 ```
 starter/
-├── index.html    two text boxes, a button, and a box for the answer
-├── agent.js      your app: builds the prompt and shows the answer
-├── ollama.js     chat(prompt) using Ollama
-└── webllm.js     chat(prompt) using WebLLM
+├── index.html        a list of the examples (replace it with your app)
+├── story.html        example 1
+├── story.js
+├── color.html        example 2
+├── color.js
+├── adventure.html    example 3
+├── adventure.js
+├── style.css         the same simple style as in class
+├── openrouter.js     chat(prompt), three ways
+├── ollama.js
+└── webllm.js
 ```
 
-1. In your website repo, make a folder called `lab-09`.
-2. On this repo's GitHub page, click **Code**, then **Download ZIP**. Unzip it and copy everything from `starter/` into `lab-09/`.
-3. Open `lab-09/index.html` with Live Server.
-4. Type a character and a place, and press **Send**. The first answer is slow while the model loads. After that it's faster.
+4. Open `lab-09/index.html` with Live Server. Click **Story**. Paste your key, fill in the boxes, and press **Send**.
 
-To use **WebLLM** instead, in `index.html` comment out the `ollama.js` line and un-comment the `webllm.js` line:
+**Check:** you get a short story.
 
-```html
-<!-- <script src="ollama.js"></script> -->
-<script type="module" src="webllm.js"></script>
-```
+## The examples
 
-The first time, the answer box shows the download progress.
+Read each `.js` file. They're short.
 
-## 3. What changed from class
+1. **Story** (`story.js`): the same pattern as `agent.js` from class. Two text boxes go into the prompt.
+2. **Color** (`color.js`): the answer changes a p5 sketch. The prompt asks for only one color name. The code checks that it's a real color, then the balls use it in `draw()`.
+3. **Adventure** (`adventure.js`): the model remembers. A model forgets everything between calls, so we keep the whole story in a variable and send all of it every time.
 
-Open `ollama.js` next to the `agent.js` we wrote in class. The `chat()` function is almost the same. Only two things changed:
+Try each example with a different way of running the model. Notice what changes.
 
-- `API_URL` is `http://localhost:11434/...`, which means **your own computer**.
-- There's **no key**, so there's no `Authorization` header.
+## What to make
 
-`MODEL` has to be a model you downloaded. If you pulled `gemma3:4b`, change it there. Type `ollama list` in a terminal to see yours.
-
-`agent.js` is your app. It's the same pattern as in class: read the text boxes, put them in a prompt with `${...}`, `await chat(prompt)`, show the answer.
-
-## 4. What to make
-
-Make a small app where a language model is part of a **creative interaction**. Replace the story example with your own idea.
+Make a small app where a language model is part of a **creative interaction**. Start from one of the examples, or from scratch.
 
 Your app has to:
 
-- **Do more than show text.** The answer should change something: a p5 sketch, a character, the colours, a score, what happens next.
-- Have a prompt **you designed**. It decides how your app feels, so take time on it. Try a few versions.
-- Call the model **when something happens** (a click, a key), never in `draw()`. A model takes a second or more to answer.
+- Use `chat()` from one of the three files.
+- **Do more than show the answer.** The answer should change something: a sketch, the colors, a score, what happens next.
+- Have a prompt **you wrote yourself**.
 
 Some ideas, if you need one:
 
-- A creature in p5 that reads what you type and changes its color and speed.
+- A creature in p5 that reads what you type, and changes its color and speed.
 - A fortune teller: ask a question, get a prophecy and a lucky color for the background.
-- A text adventure: the model describes a room, you type what you do, it tells you what happens.
-- A game where the model is the judge: two players type, it picks a winner and explains why.
-- Your Ball sketch from Lab 05, where the model decides what color the balls should be.
+- A game where the model is the judge: two players type, it picks a winner and says why.
+- Your Ball sketch from Lab 05, where the model decides how the balls behave.
+- A poem that grows: you write a line, the model writes the next one.
 
-Small models are a bit dumb and a bit strange. Design for that. Weird is good.
+## Guidelines
 
-<details>
-<summary><strong>Hint: using the answer in a p5 sketch</strong></summary>
+- **Start small.** Get one example working first. Then change one thing at a time.
+- **Write the prompt like instructions to a person.** Say who the model is, what it gets, and what to send back.
+- **Ask for answers your code can use.** "Answer with only one word" is easier to use than a paragraph.
+- **Check the answer before you use it.** Models don't always listen, and small ones listen less. See how `color.js` does it.
+- **Call the model when something happens**: a click, a key. Never in `draw()`. An answer takes a second or more.
+- **Keep your key out of your code.** Use the key box.
+- **Try a few prompts.** Changing a few words can change the whole app. Keep notes on what you tried.
 
-Ask for an answer your code can use. Tell the model exactly what to send back:
-
-```js
-const prompt = `
-What color is this feeling: ${feeling}
-Answer with only one CSS color name, like "tomato" or "skyblue". Nothing else.
-`;
-let answer = await chat(prompt);
-ballColor = answer.trim(); // trim() removes spaces and new lines around it
-```
-
-Then use `ballColor` in `draw()`, like any other variable. Add p5 to `index.html` the same way as in your other labs.
-
-Small models don't always listen. If you get "The color is tomato." instead of "tomato", make the prompt stricter, or check the answer before you use it.
-
-</details>
+Weird is good. Have fun with it.
 
 ### Bonus
 
-- Remember the conversation: keep earlier messages in the `messages` array, so the model remembers what you said.
-- Mix it with ml5.js: turn what the webcam sees into words, then put them in your prompt.
+- Show the same prompt answered two ways, for example OpenRouter and Ollama, side by side.
+- Mix it with ml5.js: turn what the webcam sees into words, and put them in your prompt.
 
-## 5. Putting it on your website
+## Putting it on your website
 
-Your page will be at `https://YOUR-USERNAME.github.io/...`. It loads from GitHub, but the model still runs on the visitor's own computer.
+Your page loads from GitHub, but the model runs somewhere else. That changes who can use it:
 
-**With WebLLM:** it just works, for anyone with Chrome or Edge. The model downloads the first time they visit.
+- **OpenRouter:** works for anyone who pastes their own key.
+- **WebLLM:** works for anyone with Chrome or Edge. The model downloads the first time.
+- **Ollama:** works only on a computer that has Ollama running, with the same model. And Ollama only answers pages on `localhost` unless you tell it otherwise. That's why Live Server works and GitHub Pages doesn't.
 
-**With Ollama:** it works only on a computer that has Ollama running, with the same model, and that has said "I trust pages from github.io". By default, Ollama only answers pages on `localhost`. That's why Live Server works and GitHub Pages doesn't. To fix it on your computer:
+To use Ollama from your GitHub Pages site on your own computer:
 
 **Mac**, in Terminal:
 
@@ -125,7 +131,7 @@ Your page will be at `https://YOUR-USERNAME.github.io/...`. It loads from GitHub
 launchctl setenv OLLAMA_ORIGINS "https://*.github.io"
 ```
 
-Then quit Ollama from the menu bar (the llama icon → **Quit Ollama**) and open it again. You have to run that line again after you restart your Mac.
+Then quit Ollama from the menu bar (the llama icon → **Quit Ollama**) and open it again. You have to do this again after you restart your Mac.
 
 **Windows**, in PowerShell:
 
@@ -133,26 +139,25 @@ Then quit Ollama from the menu bar (the llama icon → **Quit Ollama**) and open
 setx OLLAMA_ORIGINS "https://*.github.io"
 ```
 
-Then quit Ollama from the system tray (right-click the llama → **Quit**) and open it again. This one is permanent.
+Then quit Ollama from the system tray (right-click the llama → **Quit**) and open it again.
 
-Then open your GitHub Pages link:
+Then:
 
-- Use **Chrome, Edge, or Firefox**. **Safari won't work**: it blocks GitHub Pages from talking to `localhost`.
-- Chrome may ask to let the page **access other apps and services on this device**. Click **Allow**.
+- Use **Chrome, Edge, or Firefox**. **Safari won't work.** It blocks GitHub Pages from talking to `localhost`.
+- If Chrome asks to let the page **access other apps and services on this device**, click **Allow**.
+- Quit Ollama when you don't need it. This setting lets any page on `github.io` use it while it's running.
 
-This lets any page on `github.io` use your Ollama while it's running. That's fine for this class. Quit Ollama when you don't need it.
-
-Because most visitors won't have Ollama, your page also needs a **screenshot or short screen recording** of the app working, so people can see it without running it.
+If you use Ollama, add a **screenshot or short screen recording** of your app working, so people can see it without running it.
 
 ## How to hand it in
 
-1. On `lab-09/index.html`, change the title and `<h1>` to your app's name, and under the app write:
-   - which model you used, and whether you used Ollama or WebLLM,
+1. Put your app in `lab-09/index.html`. You can keep the examples or delete them.
+2. Change the title and the `<h1>` to your app's name. Under the app, write:
+   - which way you ran the model (OpenRouter, Ollama, or WebLLM) and which model,
    - your prompt,
-   - two or three sentences: what the model did well, and what surprised you.
-2. Add the screenshot or screen recording to the page.
+   - two or three sentences: what worked, what surprised you, and how Ollama or WebLLM felt compared to OpenRouter.
 3. Add a link to it on `projects/iat-806/index.html`.
-4. Commit and sync, then open it on GitHub Pages.
+4. Commit and sync, then check that it works on GitHub Pages.
 
 In **Canvas**, submit:
 
@@ -165,10 +170,13 @@ Need a reminder on adding a folder to your site? See [section 4 of the personal-
 
 Open the browser console (right-click the page → **Inspect** → **Console**) and read the red text.
 
-- **`Failed to fetch`** with Live Server: the Ollama app isn't open. Open it, then check [http://localhost:11434](http://localhost:11434).
-- **`Failed to fetch`** on GitHub Pages, and the console mentions **CORS**: you didn't set `OLLAMA_ORIGINS`, didn't restart Ollama after setting it, or you're in Safari. See step 5.
-- **`model '...' not found`**: `MODEL` in `ollama.js` isn't a model you downloaded. Run `ollama list` to see yours, or `ollama pull gemma3:1b`.
-- **`chat is not defined`**: the `<script>` line for `ollama.js` or `webllm.js` is missing, or both are commented out.
-- **WebLLM says it can't find WebGPU**: use Chrome or Edge on a laptop, or use Ollama.
+- **`chat is not defined`**: the `<script>` line for `openrouter.js`, `ollama.js`, or `webllm.js` is missing, or all three are commented out. It has to come **before** your own `.js` file.
+- **`Cannot read properties of null (reading 'value')`** with OpenRouter: your page has no key box. Copy the `<input id="key" ...>` line from an example.
+- **`No API key in the Authorization header`** or **`Missing Authentication header`**: the OpenRouter key box is empty, or the key is wrong. Paste it again.
+- **`429`** or **`Provider returned error`**: the free OpenRouter model is busy. Wait a minute, or change `MODEL` in `openrouter.js`.
+- **`Failed to fetch`** with Ollama on Live Server: the Ollama app isn't open. Open it, then check [http://localhost:11434](http://localhost:11434).
+- **`Failed to fetch`** with Ollama on GitHub Pages, and the console mentions **CORS**: see [Putting it on your website](#putting-it-on-your-website).
+- **`model '...' not found`**: `MODEL` in `ollama.js` isn't a model you downloaded. Run `ollama list` to see yours.
+- **WebLLM can't find WebGPU**: use Chrome or Edge on a laptop.
 - **WebLLM is stuck loading, or the tab crashes**: the model is too big for your computer. Try `Llama-3.2-1B-Instruct-q4f16_1-MLC` in `webllm.js`.
-- **It's very slow**: the first answer loads the model, so it's always slow. If every answer is slow, use a smaller model, and don't call `chat()` in `draw()`.
+- **It's very slow**: the first answer is always slow while the model loads. If every answer is slow, use a smaller model, and don't call `chat()` in `draw()`.

@@ -1,6 +1,6 @@
 // ollama.js
-// The chat() function from class, but the model runs on YOUR computer with Ollama.
-// Only two things changed:
+// chat(prompt) using Ollama. The model runs on YOUR computer.
+// It's the chat() from class with two changes:
 //   1. the URL is your own computer (localhost), not openrouter.ai
 //   2. there is no key: it's free, and nothing you type leaves your laptop
 

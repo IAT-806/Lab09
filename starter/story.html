@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Story</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <p><a href="index.html">← All examples</a></p>
+    <h1>Story</h1>
+
+    <!-- Only for OpenRouter. Paste your key here. Never type it into your code: this site is on GitHub. -->
+    <input id="key" type="password" placeholder="OpenRouter API key (sk-or-...)" />
+
+    <input id="character" placeholder="A character (a lonely robot)" />
+    <input id="place" placeholder="A place (a laundromat at 3am)" />
+    <button id="send">Send</button>
+
+    <pre id="output"></pre>
+
+    <!-- Where the model runs. Keep ONE of these three lines. -->
+    <script src="openrouter.js"></script>
+    <!-- <script src="ollama.js"></script> -->
+    <!-- <script type="module" src="webllm.js"></script> -->
+
+    <script src="story.js"></script>
+  </body>
+</html>

@@ -1,5 +1,6 @@
-// agent.js
-// Your app. Right now it writes a tiny story. Change it into your own idea.
+// story.js
+// Example 1: the same pattern as agent.js from class.
+// Two text boxes go into the prompt. The answer is a tiny story.
 
 document.querySelector("#send").addEventListener("click", async () => {
   const character = document.querySelector("#character").value;
@@ -15,7 +16,7 @@ document.querySelector("#send").addEventListener("click", async () => {
   Only write the story, nothing else.
   `;
 
-  output.textContent = "Thinking... (the first time is slow while the model loads)";
-  let story = await chat(prompt); // chat() is in ollama.js or webllm.js
+  output.textContent = "Thinking...";
+  let story = await chat(prompt);
   output.textContent = story;
 });
